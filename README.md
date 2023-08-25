@@ -11,7 +11,7 @@ This repository is the pytorch implementation of our paper:
 [__***Muhammad Zubair Irshad***__](https://zubairirshad.com), [Sergey Zakharov](https://zakharos.github.io/), [Katherine Liu](https://www.thekatherineliu.com/), [Vitor Guizilini](https://www.linkedin.com/in/vitorguizilini), [Thomas Kollar](http://www.tkollar.com/site/), [Adrien Gaidon](https://adriengaidon.com/), [Zsolt Kira](https://faculty.cc.gatech.edu/~zk15/), [Rares Ambrus](https://www.tri.global/about-us/dr-rares-ambrus) <br>
 International Conference on Computer Vision (ICCV), 2023<br>
 
-[[Project Page](https://zubair-irshad.github.io/projects/neo360.html)] [[arXiv](https://arxiv.org/abs/2308.12967)] [[PDF](https://arxiv.org/pdf/2308.12967.pdf)]
+[[Project Page](https://zubair-irshad.github.io/projects/neo360.html)] [[arXiv](https://arxiv.org/abs/2308.12967)] [[PDF](https://arxiv.org/pdf/2308.12967.pdf)] [[Video](https://youtu.be/avmylyL_V8c?si=eeTPhl0xJxM3fSF7)]
 
 
 <p align="center">
