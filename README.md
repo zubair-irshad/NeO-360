@@ -39,7 +39,7 @@ NeRDS 360: "NeRF for Reconstruction, Decomposition and Scene Synthesis of 360° 
 * [NERDS360 Test Set](https://tri-ml-public.s3.amazonaws.com/github/neo360/datasets/PD_v6_test.tar.gz) - 5 Scenes (2.1 GB)
 
 #### Visualizing the dataset (Coming Soon):
-We will release our visualization scripts to generate visualziations like below i.e. plot accumulated pointclouds, multi-view camera annotations etc. 
+We will release our visualization scripts to generate visualizations like below i.e. plot accumulated pointclouds, multi-view camera annotations etc. 
 
 <p align="center">
 <img src="demo/cameras.gif" width="100%">
