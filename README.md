@@ -9,10 +9,10 @@ This repository is the pytorch implementation of our **ICCV2023** paper.
 ### [Project Page](https://zubair-irshad.github.io/projects/neo360.html) | [arXiv](https://arxiv.org/abs/2308.12967) | [PDF](https://arxiv.org/pdf/2308.12967.pdf) | [Video](https://youtu.be/avmylyL_V8c?si=eeTPhl0xJxM3fSF7)
 
 <a href="https://www.tri.global/" target="_blank">
- <img align="right" src="demo/GeorgiaTech_RGB.png" width="20%"/>
+ <img align="right" src="demo/GeorgiaTech_RGB.png" width="21%"/>
 </a>
 
-**NEO 360: Neural Fields for Sparse View  <br> Synthesis of Outdoor Scenes**<br>
+**NEO 360: Neural Fields for Sparse View Synthesis <br> of Outdoor Scenes**<br>
 
 <a href="https://zubairirshad.com"><strong>Muhammad Zubair Irshad</strong></a>
 ·
