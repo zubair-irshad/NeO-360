@@ -3,13 +3,13 @@
 This repository is the pytorch implementation of our **ICCV2023** paper.
 
 <a href="https://www.tri.global/" target="_blank">
- <img align="right" src="demo/tri-logo.png" width="25%"/>
+ <img align="right" src="demo/tri-logo.png" width="20%"/>
 </a>
 
 ### [Project Page](https://zubair-irshad.github.io/projects/neo360.html) | [arXiv](https://arxiv.org/abs/2308.12967) | [PDF](https://arxiv.org/pdf/2308.12967.pdf) | [Video](https://youtu.be/avmylyL_V8c?si=eeTPhl0xJxM3fSF7)
 
 <a href="https://www.tri.global/" target="_blank">
- <img align="right" src="demo/GeorgiaTech_RGB.png" width="25%"/>
+ <img align="right" src="demo/GeorgiaTech_RGB.png" width="20%"/>
 </a>
 
 **NEO 360: Neural Fields for Sparse View  <br> Synthesis of Outdoor Scenes**<br>
@@ -132,10 +132,15 @@ Run the following script to run visualization i.e. 360&deg; rendering from just 
 python run.py --dataset_name pd_multi_obj_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode vis_only --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
 ```
 
-You would see images which would produce renderings like the last column as shown below:
+You would see images which would produce renderings like the last column as shown below. 10 of the 100 rendered views randomly sampled are shown in the second diagram below:
 
 <p align="center">
 <img src="demo/qualitative_results.gif" width="100%">
+</p>
+
+
+<p align="center">
+<img src="demo/360_qualitative_NeRO.jpg" width="100%">
 </p>
 
 
@@ -176,10 +181,10 @@ We also provide an ```is_optimize``` flag to finetune on the few-shot source ima
 
 While over proposed technique is a generalizable method which works in a few-shot setting, for the ease of reproducibility and to push the state-of-the-art on single scene novel-view-synthesis of unbounded scenes, we provide scripts to overfit to single scenes given many images. We provide [NeRF](https://github.com/bmild/nerf) and [MipNeRF-360](https://jonbarron.info/mipnerf360/) baselines from [NeRF-Factory](https://github.com/kakaobrain/nerf-factory) with our newly proposed NeRDS360 dataset. 
 
-To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simple run:
+To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simply run:
 
 
-To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simple run:
+To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
 
 
 #### How well does single scene overfitting work:
