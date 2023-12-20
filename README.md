@@ -112,9 +112,9 @@ python visualize/visualize_nerds360.py --base_dir PDMultiObjv6/train/SF_GrantAnd
 
 We provide two conveneint dataloaders written in **pytorch** for a. single-scene overfitting i.e. settings like testing [MipNeRF-360](https://jonbarron.info/mipnerf360/) and b. generalizable evaluation i.e. few-shot setting introduced in our paper. There is a convenient ```read_poses``` function in each of the dataloaders. Use this function to see how we load poses with the corresponding images to use our **NERDS360** dataset with any NeRF implementation.
 
-a. Our dataloader for single scene overfitting is provided in ```datasets/pdmultiobject.py```. This dataloader directly outputs RGB, poses pairs in the same format as [NeRF](https://github.com/bmild/nerf)/[MipNeRF-360](https://jonbarron.info/mipnerf360/) and could be used with any of the NeRF implementation i.e. nerf-studio, nerf-factory or nerf-pl.
+a. Our dataloader for single scene overfitting is provided in ```datasets/nerds360.py```. This dataloader directly outputs RGB, poses pairs in the same format as [NeRF](https://github.com/bmild/nerf)/[MipNeRF-360](https://jonbarron.info/mipnerf360/) and could be used with any of the NeRF implementation i.e. nerf-studio, nerf-factory or nerf-pl.
 
-b. Our dataloader for generalizable training is provided in ```datasets/pdmultiobject_ae.py```. This datalaoder is used for the few-shot setting proposed in our NeO360 paper. During eery training iteration, we randomly select 3 source views and 1 target view and sample 1000 rays from target view for decoding the radiance field. This is the same dataloader you'll see gets utilized next during training below.
+b. Our dataloader for generalizable training is provided in ```datasets/nerds360_ae.py```. ```ae``` denotes auto-encoder style of training. This datalaoder is used for the few-shot setting proposed in our NeO360 paper. During eery training iteration, we randomly select 3 source views and 1 target view and sample 1000 rays from target view for decoding the radiance field. This is the same dataloader you'll see gets utilized next during training below.
 
 **Note**: Our NeRDS360 dataset also provides **depth map, NOCS maps, instance segmentation, semantic segmentation and 3D bounding box annotations** (all of these annotations are not used either during training or during inference and we only use RGB imahes). Although these annotations can be used for other computer vision tasks to push the SOTA for unbounded outdoor tasks like instance segmentation. All the other annotations are easy to load and provided as ```.png``` files
 
@@ -129,7 +129,7 @@ Download the pretrained checkpoint from [here](https://drive.google.com/file/d/1
 Run the following script to run visualization i.e. 360&deg; rendering from just 3 or 5 source views given as input:
 
 ```python
-python run.py --dataset_name pd_multi_obj_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode vis_only --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
+python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode vis_only --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
 ```
 
 You would see images which would produce renderings like the last column as shown below. 10 of the 100 rendered views randomly sampled are shown in the second diagram below:
@@ -147,7 +147,7 @@ You would see images which would produce renderings like the last column as show
 For evaluation i.e. logging psnr, lpips and ssim metrics as reported in the paper, run the following script:
 
 ```python
-python run.py --dataset_name pd_multi_obj_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode full_eval --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
+python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode full_eval --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
 ```
 
 The current script evaluates the scenes one by one. Note that 3 or 5 source views are not part of any of the rendered 100 360&deg; views and are chosen randomly from the upper hemisphere (currently hardcoded random views) 
@@ -164,18 +164,20 @@ All our experiments were performed on 8 Nvidia A100 GPUs. Please refer to our pa
 Stage 1 training, please run:
 
 ```python
-python run.py --dataset_name pd_multi_obj_ae --root_dir data/PDMultiObjv6/train/ --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8
+python run.py --dataset_name nerds360_ae --root_dir data/PDMultiObjv6/train/ --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8
 ```
 
 Stage 2 finetuning with an additional LPIPS loss, please specificy the checkpoint from which to finetune and add finetune_lpips flag to run the command below:
 
 ```python
-python run.py --dataset_name pd_multi_obj_ae --root_dir data/PDMultiObjv6/train --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8 --ckpt_path epoch=29.ckpt --finetune_lpips
+python run.py --dataset_name nerds360_ae --root_dir data/PDMultiObjv6/train --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8 --ckpt_path epoch=29.ckpt --finetune_lpips
 ```
 
 At the end of training run, you will see checkpoints stored under ```ckpts/$exp_name``` directory with stage 1 training run checkpoints labelled as ```epoch=aa.ckpt``` and finetune checkpoints labelled as ```finetune_lpips_epoch=aa.ckpt```
 
 We also provide an ```is_optimize``` flag to finetune on the few-shot source images of a new domain as well. Please refer to our paper for more details on what this flag refers and if this is useful for your case. 
+
+We also provide a home-grown implementation of [PixelNeRF](https://github.com/sxyu/pixel-nerf) which is built on top of NeRF-Factory and Pytorch Lightning. If you are a user of both of these, you might find it helpful. Just use exp_type ```pixelnerf``` and our generalizable dataset ```nerds360_ae``` to run pixelnerf training and evaluation with the scripts mentioned above :) 
 
 ## 📊  Overfitting Training Runs
 
@@ -183,8 +185,25 @@ While over proposed technique is a generalizable method which works in a few-sho
 
 To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simply run:
 
+```python
+python run.py --dataset_name nerds360 --root_dir /home/ubuntu/zubair/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+```
+
+
 
 To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
+
+```python
+python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+```
+
+You'll see results as below. We achive a test-set PSNR of 24.75 and SSIM of 0.78 for this scene.
+
+<div align="center">
+  <img src="demo/vanilla_overfit_rgb.gif" width="45%" alt="Left GIF">
+  <img src="demo/vanilla_overfit_depth.gif" width="45%" alt="Right GIF">
+</div>
+
 
 
 #### How well does single scene overfitting work:

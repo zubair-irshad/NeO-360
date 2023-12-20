@@ -15,8 +15,8 @@ def get_opts():
         type=str,
         default="blender",
         choices=[
-            "pd_multi_obj",
-            "pd_multi_obj_ae"
+            "nerds360",
+            "nerds360_ae"
         ],
         help="which dataset to train/val",
     )

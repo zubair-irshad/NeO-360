@@ -19,7 +19,7 @@ from models.mipnerf360.model import LitMipNeRF360
 from models.neo360.model_co_tp_nocs_fusion_conv_scene import (
     LitNeRFTP_FUSION_CONV_SCENE,
 )
-# from models.vanilla_nerf.model_pixel import LitPixelNeRF
+from models.vanilla_nerf.model_pixel import LitPixelNeRF
 
 
 # For debugging
@@ -40,6 +40,8 @@ def main(hparams):
         system = LitMipNeRF360(hparams=hparams)
     elif hparams.exp_type == "triplanar_nocs_fusion_conv_scene":
         system = LitNeRFTP_FUSION_CONV_SCENE(hparams=hparams)
+    elif hparams.exp_type == "pixelnerf":
+        system = LitPixelNeRF(hparams=hparams)
 
     if hparams.is_optimize is not None:
         num = int(hparams.is_optimize[0])

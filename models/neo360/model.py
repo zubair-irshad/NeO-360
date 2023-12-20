@@ -632,8 +632,8 @@ class LitNeRFTP_FUSION_CONV_SCENE(LitModel):
     def setup(self, stage: Optional[str] = None) -> None:
         dataset = dataset_dict[self.hparams.dataset_name]
 
-        if (self.hparams.dataset_name == "pd_multi_obj"
-            or self.hparams.dataset_name == "pd_multi_obj_ae"
+        if (self.hparams.dataset_name == "nerds360"
+            or self.hparams.dataset_name == "nerds360_ae"
         ):
             kwargs_train = {
                 "root_dir": self.hparams.root_dir,
