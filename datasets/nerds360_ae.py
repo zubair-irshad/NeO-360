@@ -20,10 +20,6 @@ def rot_from_origin(c2w, rotation=10):
 
 
 def get_rotation_matrix(rotation):
-    # if iter_ is not None:
-    #    rotation = self.near_c2w_rot * (self.smoothing_rate **(int(iter_/self.smoothing_step_size)))
-    # else:
-
     phi = rotation * (np.pi / 180.0)
     x = np.random.uniform(-phi, phi)
     y = np.random.uniform(-phi, phi)
@@ -127,27 +123,6 @@ def get_nearest_pose_ids(
     # print(angular_dists[selected_ids] * 180 / np.pi)
     return selected_ids
 
-
-# def select_key_frames(num_cameras, source_cameras, rel_translations, rel_rotations, tmax, Rmax):
-#     # Create boolean masks for source cameras and valid destination cameras
-#     is_source_camera = np.zeros(num_cameras, dtype=bool)
-#     is_source_camera[source_cameras] = True
-#     is_valid_dest_camera = ~is_source_camera
-
-#     # Create boolean masks for pairs of cameras that satisfy the conditions
-#     trans_mask = np.linalg.norm(rel_translations, axis=-1) < tmax
-#     rot_mask = np.abs(rel_rotations) < Rmax
-
-#     # Use boolean masks to select valid pairs of cameras
-#     valid_pairs = np.logical_and(np.logical_and(trans_mask, rot_mask), np.outer(is_source_camera, is_valid_dest_camera))
-
-#     # Find the indices of valid destination cameras
-#     key_frames = np.where(np.any(valid_pairs, axis=0))[0].tolist()
-
-#     # Return the list of key frames
-#     return key_frames
-
-
 def move_camera_pose(pose, progress):
     # control the camera move (spiral pose)
     t = progress * np.pi * 4
@@ -175,10 +150,6 @@ def read_poses(pose_dir_train, img_files_train, output_boxes=False, contract=Tru
 
     all_c2w_train = np.array(all_c2w_train)
     pose_scale_factor = 1.0 / np.max(np.abs(all_c2w_train[:, :3, 3]))
-
-    # print("=====================================\n")
-    # print("pose_scale_factor", pose_scale_factor)
-    # print("=====================================\n")
 
     all_c2w_train[:, :3, 3] *= pose_scale_factor
 
@@ -780,8 +751,6 @@ class NeRDS360_AE(Dataset):
                 sample["src_poses"] = poses
                 sample["src_focal"] = focals
                 sample["src_c"] = all_c
-                # sample["near_obj"] = near_obj
-                # sample["far_obj"] = far_obj
                 sample["instance_mask"] = masks
                 sample["rays_o"] = rays
                 sample["rays_d"] = rays_d
@@ -912,8 +881,6 @@ class NeRDS360_AE(Dataset):
                 sample["src_imgs"] = imgs
                 sample["src_poses"] = poses
                 sample["src_focal"] = focals
-                # sample["near_obj"] = near_obj
-                # sample["far_obj"] = far_obj
                 sample["instance_mask"] = masks
                 sample["inst_seg_mask"] = inst_seg_masks
                 sample["src_c"] = all_c
@@ -952,8 +919,6 @@ class NeRDS360_AE(Dataset):
                 elif num == 1:
                     src_views_num = [0]
                 dest_view_num = idx
-                # dest_view_num = src_views_num[idx]
-                # dest_view_num = 135
 
             else:
                 if self.optimize is not None:
@@ -1031,14 +996,6 @@ class NeRDS360_AE(Dataset):
             poses = torch.stack(poses, 0)
             focals = torch.stack(focals, 0)
             all_c = torch.stack(all_c, 0)
-
-            print("imgs shape", imgs.shape)
-            print("poses shape", poses.shape)
-            print("focals shape", focals.shape)
-
-            # near_obj, far_obj, _ = sample_rays_in_bbox_list(
-            #     self.RTs, rays.numpy(), view_dirs.numpy()
-            # )
 
             if self.model_type == "Vanilla":
                 sample = {
