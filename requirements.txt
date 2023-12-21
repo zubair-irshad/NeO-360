@@ -25,6 +25,8 @@ omegaconf
 piqa
 wandb
 dotmap
+lpips
+torch_efficient_distloss
 functorch==0.1.0
 setuptools==59.5.0
 
