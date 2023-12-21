@@ -77,6 +77,7 @@ conda activate neo 360
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://download.pytorch.org/whl/torch_stable.html
+export neo360_rootdir=$PWD
 ```
 The code was built and tested on **cuda 11.3**
 
@@ -93,6 +94,8 @@ NeRDS 360: "NeRF for Reconstruction, Decomposition and Scene Synthesis of 360° 
 #### Download the dataset:
 * [NERDS360 Training Set](https://tri-ml-public.s3.amazonaws.com/github/neo360/datasets/PDMultiObjv6.tar.gz) - 75 Scenes (19.5 GB)
 * [NERDS360 Test Set](https://tri-ml-public.s3.amazonaws.com/github/neo360/datasets/PD_v6_test.tar.gz) - 5 Scenes (2.1 GB)
+
+Extract the data under ```data``` directory or provide a symlink under project ```data``` directory. The directory structure should look like this ```$neo360_rootdir/data/PDMuliObjv6```
 
 #### Visualizing the dataset:
 To plot accumulated pointclouds, multi-view camera annotations and bounding boxes annotations as shown in the visualization below, run the following commands. This visualization script is adapted from [NeRF++](https://github.com/Kai-46/nerfplusplus). 
@@ -131,7 +134,7 @@ Extract them under the project folder with directory structure ```data``` and ``
 Run the following script to run visualization i.e. 360&deg; rendering from just 3 or 5 source views given as input:
 
 ```python
-python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode vis_only --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
+python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode vis_only --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir $neo360_rootdir/data/neo360_valsplit/test_novelobj
 ```
 
 You would see images which would produce renderings like the last column as shown below. 10 of the 100 rendered views randomly sampled are shown in the second diagram below:
@@ -149,7 +152,7 @@ You would see images which would produce renderings like the last column as show
 For evaluation i.e. logging psnr, lpips and ssim metrics as reported in the paper, run the following script:
 
 ```python
-python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode full_eval --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir data/neo360_valsplit/test_novelobj
+python run.py --dataset_name nerds360_ae --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --eval_mode full_eval --render_name 5viewtest_novelobj30_SF0_360_LPIPS --ckpt_path finetune_lpips_epoch=30.ckpt --root_dir $neo360_rootdir/data/neo360_valsplit/test_novelobj
 ```
 
 The current script evaluates the scenes one by one. Note that 3 or 5 source views are not part of any of the rendered 100 360&deg; views and are chosen randomly from the upper hemisphere (currently hardcoded random views) 
@@ -166,13 +169,13 @@ All our experiments were performed on 8 Nvidia A100 GPUs. Please refer to our pa
 Stage 1 training, please run:
 
 ```python
-python run.py --dataset_name nerds360_ae --root_dir data/PDMultiObjv6/train/ --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8
+python run.py --dataset_name nerds360_ae --root_dir $neo360_rootdir/data/PDMultiObjv6/train/ --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8
 ```
 
 Stage 2 finetuning with an additional LPIPS loss, please specificy the checkpoint from which to finetune and add finetune_lpips flag to run the command below:
 
 ```python
-python run.py --dataset_name nerds360_ae --root_dir data/PDMultiObjv6/train --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8 --ckpt_path epoch=29.ckpt --finetune_lpips
+python run.py --dataset_name nerds360_ae --root_dir $neo360_rootdir/data/PDMultiObjv6/train --exp_type triplanar_nocs_fusion_conv_scene --exp_name multi_map_tp_CONV_scene --encoder_type resnet --batch_size 1 --img_wh 320 240 --num_gpus 8 --ckpt_path epoch=29.ckpt --finetune_lpips
 ```
 
 At the end of training run, you will see checkpoints stored under ```ckpts/$exp_name``` directory with stage 1 training run checkpoints labelled as ```epoch=aa.ckpt``` and finetune checkpoints labelled as ```finetune_lpips_epoch=aa.ckpt```
@@ -188,15 +191,14 @@ While over proposed technique is a generalizable method which works in a few-sho
 To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simply run:
 
 ```python
-python run.py --dataset_name nerds360 --root_dir /home/ubuntu/zubair/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 7
+python run.py --dataset_name nerds360 --root_dir $neo360_rootdir/data/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 7
 ```
 
 For evaluation, run:
 
 ```python
-python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 1 --eval_mode vis_only --render_name vanilla_eval
+python run.py --dataset_name nerds360 --root_dir $neo360_rootdir/data/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 1 --eval_mode vis_only --render_name vanilla_eval
 ```
-
 
 You'll see results as below. We achive a test-set PSNR of 24.75 and SSIM of 0.78 for this scene.
 
@@ -208,7 +210,7 @@ You'll see results as below. We achive a test-set PSNR of 24.75 and SSIM of 0.78
 To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
 
 ```python
-python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+python run.py --dataset_name nerds360 --root_dir $neo360_rootdir/data/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
 ```
 
 ## Acknowledgments
