@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torchvision
 import sys
 sys.path.append('/home/ubuntu/nerf_pl')
-from models.nerfplusplus.util import get_norm_layer
+from models.neo360.util import get_norm_layer
 # from model.custom_encoder import ConvEncoder
 import torch.autograd.profiler as profiler
 
