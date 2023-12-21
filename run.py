@@ -16,7 +16,7 @@ wandb_logger = WandbLogger()
 # baselines models
 from models.vanilla_nerf.model import LitNeRF
 from models.mipnerf360.model import LitMipNeRF360
-from models.neo360.model_co_tp_nocs_fusion_conv_scene import (
+from models.neo360.model import (
     LitNeRFTP_FUSION_CONV_SCENE,
 )
 from models.vanilla_nerf.model_pixel import LitPixelNeRF
