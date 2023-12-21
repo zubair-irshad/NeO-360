@@ -24,6 +24,7 @@ pytransform3d
 omegaconf
 piqa
 wandb
+dotmap
 functorch==0.1.0
 setuptools==59.5.0
 
