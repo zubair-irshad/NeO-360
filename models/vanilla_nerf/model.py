@@ -20,7 +20,12 @@ import torch.nn.functional as F
 import torch.nn.init as init
 import torch.distributed as dist
 from collections import defaultdict
-from models.utils import store_image
+from models.utils import (
+    store_image,
+    store_depth_img,
+    write_stats,
+    get_obj_rgbs_from_segmap,
+)
 
 import models.vanilla_nerf.helper as helper
 from utils.train_helper import *
@@ -343,6 +348,7 @@ class LitNeRF(LitModel):
             )
             # here 1 denotes fine
             ret["comp_rgb"] += [rendered_results_chunk[1][0]]
+            ret["depth"] += [rendered_results_chunk[1][2]]
             # for k, v in rendered_results_chunk[1].items():
             #     ret[k] += [v]
         target = batch["target"]
@@ -353,6 +359,7 @@ class LitNeRF(LitModel):
         test_output["target"] = batch["target"]
         # test_output["instance_mask"] = batch["instance_mask"]
         test_output["rgb"] = ret["comp_rgb"]
+        test_output["depth"] = ret["depth"]
         return test_output
 
     def on_validation_start(self):
@@ -478,6 +485,8 @@ class LitNeRF(LitModel):
 
         rgbs = self.alter_gather_cat(outputs, "rgb", all_image_sizes)
 
+        depths = self.alter_gather_cat(outputs, "depth", all_image_sizes)
+
         targets = self.alter_gather_cat(outputs, "target", all_image_sizes)
 
         psnr = self.psnr(rgbs, targets, None, None, None)
@@ -512,6 +521,8 @@ class LitNeRF(LitModel):
             )
             os.makedirs(image_dir, exist_ok=True)
             store_image(image_dir, rgbs, "image")
+
+            store_depth_img(image_dir, depths, "depth_img")
 
             result_path = os.path.join("ckpts", self.hparams.exp_name, "results.json")
             # write_stats(result_path, psnr, ssim, lpips, psnr_obj)

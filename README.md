@@ -186,16 +186,15 @@ While over proposed technique is a generalizable method which works in a few-sho
 To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simply run:
 
 ```python
-python run.py --dataset_name nerds360 --root_dir /home/ubuntu/zubair/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+python run.py --dataset_name nerds360 --root_dir /home/ubuntu/zubair/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 7
 ```
 
-
-
-To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
+For evaluation, run:
 
 ```python
-python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type vanilla --exp_name overfitting_test_vanilla_2 --img_wh 320 240 --num_gpus 1 --eval_mode vis_only --render_name vanilla_eval
 ```
+
 
 You'll see results as below. We achive a test-set PSNR of 24.75 and SSIM of 0.78 for this scene.
 
@@ -204,11 +203,11 @@ You'll see results as below. We achive a test-set PSNR of 24.75 and SSIM of 0.78
   <img src="demo/vanilla_overfit_depth.gif" width="45%" alt="Right GIF">
 </div>
 
+To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
 
-
-#### How well does single scene overfitting work:
-
-We achieve hold-out view PSNR of _ and _ when running Vanilla NeRF and MipNeRF 360 for 
+```python
+python run.py --dataset_name nerds360 --root_dir PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
+```
 
 ## Acknowledgments
 This code is built upon the implementation from [nerf-factory](https://github.com/kakaobrain/nerf-factory), [NeRF++](https://github.com/Kai-46/nerfplusplus) and [PixelNeRF](https://github.com/sxyu/pixel-nerf) with distortion loss and unbounded scene contraction used from [MipNeRF360](https://github.com/google-research/multinerf). Kudos to all the authors for great works and releasing their code. Thanks to the original [NeRF](https://github.com/bmild/nerf) implementation and the pytorch implementation [nerf_pl](https://github.com/kwea123/nerf_pl) for additional inspirations during this project. 

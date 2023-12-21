@@ -404,7 +404,7 @@ class LitMipNeRF360(LitModel):
             "model_type": "mip_nerf",
         }
 
-        if self.hparams.run_eval:
+        if self.hparams.eval_mode is not None:
             kwargs_test = {
                 "root_dir": self.hparams.root_dir,
                 "img_wh": tuple(self.hparams.img_wh),
@@ -425,9 +425,6 @@ class LitMipNeRF360(LitModel):
             self.white_bkgd = self.train_dataset.white_back
 
     def training_step(self, batch, batch_idx):
-        for k, v in batch.items():
-            print(k, v.shape)
-
         for k, v in batch.items():
             if k == "obj_idx" or k == "instance_ids":
                 continue
@@ -484,8 +481,8 @@ class LitMipNeRF360(LitModel):
                 else:
                     batch_chunk[k] = v[i : i + self.hparams.chunk]
 
-            for k, v in batch_chunk.items():
-                print("batch chunk, k,v", k, v.shape)
+            # for k, v in batch_chunk.items():
+            #     print("batch chunk, k,v", k, v.shape)
 
             rendered_results_chunk, ray_history = self.model(
                 batch_chunk, train_frac, False, False, self.near, self.far
@@ -526,8 +523,8 @@ class LitMipNeRF360(LitModel):
             # rendered_results_chunk = self.model(
             #     batch_chunk, False, self.white_bkgd, self.near, self.far
             # )
-            for k, v in batch_chunk.items():
-                print("batch chunk, k,v", k, v.shape)
+            # for k, v in batch_chunk.items():
+            #     print("batch chunk, k,v", k, v.shape)
             rendered_results_chunk, ray_history = self.model(
                 batch_chunk, train_frac, False, False, self.near, self.far
             )

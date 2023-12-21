@@ -433,8 +433,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     base_dir = args.base_dir
 
-    # base_dir = '/home/zubairirshad/Downloads/PDMultiObjv6/train/SF_6thAndMission_medium0'
-
     img_files = os.listdir(os.path.join(base_dir, 'train','rgb'))
     img_files.sort()
 

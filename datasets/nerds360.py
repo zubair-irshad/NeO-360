@@ -8,6 +8,92 @@ from torchvision import transforms as T
 import cv2
 from .ray_utils import *
 
+
+# def read_poses(pose_dir_train, pose_dir_val, img_files):
+#     pose_file_train = os.path.join(pose_dir_train, 'pose.json')
+#     pose_file_val = os.path.join(pose_dir_val, 'pose.json')
+#     with open(pose_file_train, "r") as read_content:
+#         data = json.load(read_content)
+#     with open(pose_file_val, "r") as read_content:
+#         data_val = json.load(read_content)
+
+#     focal = data['focal']
+#     img_wh = data['img_size']
+#     obj_location = np.array(data["obj_location"])
+#     all_c2w = []
+
+#     for img_file in img_files:
+#         c2w = np.array(data['transform'][img_file.split('.')[0]])
+#         c2w[:3, 3] = c2w[:3, 3] - obj_location
+#         all_c2w.append(convert_pose_PD_to_NeRF(c2w))
+
+#     for img_file in img_files:
+#         c2w = np.array(data_val['transform'][img_file.split('.')[0]])
+#         c2w[:3, 3] = c2w[:3, 3] - obj_location
+#         all_c2w.append(convert_pose_PD_to_NeRF(c2w))
+
+#     all_c2w = np.array(all_c2w)
+
+#     pose_scale_factor = 1. / np.max(np.abs(all_c2w[:, :3, 3]))
+#     all_c2w[:, :3, 3] *= pose_scale_factor
+
+#     all_c2w_train = all_c2w[:99, :, :]
+#     all_c2w_test = all_c2w[99:, :, :]
+
+#     return all_c2w_train, all_c2w_test, focal, img_wh
+
+# def read_poses(pose_dir_train, pose_dir_val, img_files_train, img_files_val, output_boxes = False):
+#     pose_file_train = os.path.join(pose_dir_train, 'pose.json')
+#     pose_file_val = os.path.join(pose_dir_val, 'pose.json')
+#     with open(pose_file_train, "r") as read_content:
+#         data = json.load(read_content)
+#     with open(pose_file_val, "r") as read_content:
+#         data_val = json.load(read_content)
+#     focal = data['focal']
+#     img_wh = data['img_size']
+#     obj_location = np.array(data["obj_location"])
+#     all_c2w = []
+#     all_c2w_train = []
+#     all_c2w_test = []
+#     for img_file in img_files_train:
+#         c2w = np.array(data['transform'][img_file.split('.')[0]])
+#         c2w[:3, 3] = c2w[:3, 3] - obj_location
+#         all_c2w.append(convert_pose_PD_to_NeRF(c2w))
+#         all_c2w_train.append(convert_pose_PD_to_NeRF(c2w))
+#     for img_file in img_files_val:
+#         c2w = np.array(data_val['transform'][img_file.split('.')[0]])
+#         c2w[:3, 3] = c2w[:3, 3] - obj_location
+#         all_c2w.append(convert_pose_PD_to_NeRF(c2w))
+#         all_c2w_test.append(convert_pose_PD_to_NeRF(c2w))
+#     all_c2w = np.array(all_c2w)
+#     all_c2w_train = np.array(all_c2w_train)
+#     all_c2w_test = np.array(all_c2w_test)
+#     pose_scale_factor = 1. / np.max(np.abs(all_c2w[:, :3, 3]))
+#     all_c2w_train[:, :3, 3] *= pose_scale_factor
+#     all_c2w_test[:, :3, 3] *= pose_scale_factor
+#     all_c2w_val = all_c2w_train[100:]
+#     all_c2w_train = all_c2w_train[:100]
+#     # Get bounding boxes for object MLP training only
+#     if output_boxes:
+#         all_boxes = []
+#         all_translations= []
+#         all_rotations = []
+#         for k,v in data['bbox_dimensions'].items():
+#                 bbox = np.array(v)
+#                 all_boxes.append(bbox*pose_scale_factor)
+#                 #New scene 200 uncomment here
+#                 all_rotations.append(data["obj_rotations"][k])
+#                 translation = (np.array(data['obj_translations'][k])- obj_location)*pose_scale_factor
+#                 all_translations.append(translation)
+#         # Old scenes uncomment here
+#         # all_translations = (np.array(data['obj_translations'])- obj_location)*pose_scale_factor
+#         # all_rotations = data["obj_rotations"]
+#         RTs = {'R': all_rotations, 'T': all_translations, 's': all_boxes}
+#         return all_c2w_train, all_c2w_val, all_c2w_test, focal, img_wh, RTs
+#     else:
+#         return all_c2w_train, all_c2w_val, all_c2w_test, focal, img_wh
+
+
 def read_poses(pose_dir_train, img_files_train, output_boxes=False):
     pose_file_train = os.path.join(pose_dir_train, "pose.json")
     with open(pose_file_train, "r") as read_content:
@@ -115,9 +201,10 @@ class NeRDS360(Dataset):
         # img_files_test.sort()
         # pose_dir_test = os.path.join(self.root_dir, "val", "pose")
 
-        # base_dir_test = os.path.join(self.root_dir, 'val')
-        # img_files_test = os.listdir(os.path.join(base_dir_test, 'rgb'))
-        # img_files_test.sort()
+        base_dir_test = os.path.join(self.root_dir, "val")
+        img_files_test = os.listdir(os.path.join(base_dir_test, "rgb"))
+        img_files_test.sort()
+        pose_dir_test = os.path.join(self.root_dir, "val", "pose")
 
         # self.all_unique_ids = [1167, 1168, 1169, 1170]
         self.near = 0.2
@@ -145,18 +232,29 @@ class NeRDS360(Dataset):
             self.all_c2w_val = all_c2w_val
             self.base_dir_val = base_dir_train
         else:
-            (
-                all_c2w,
-                all_c2w_val,
-                self.focal,
-                self.img_size,
-                _,
-                poses_scale_factor,
-            ) = read_poses(pose_dir_train, img_files_train, output_boxes=True)
+            # (
+            #     all_c2w,
+            #     all_c2w_val,
+            #     self.focal,
+            #     self.img_size,
+            #     _,
+            #     poses_scale_factor,
+            # ) = read_poses(pose_dir_train, img_files_train, output_boxes=True)
 
-            self.img_files_val = img_files_train[100:]
-            self.all_c2w_val = all_c2w_val
-            self.base_dir_val = base_dir_train
+            # self.img_files_val = img_files_train[100:]
+            # self.all_c2w_val = all_c2w_val
+            # self.base_dir_val = base_dir_train
+
+            _, _, self.focal, self.img_size, _, poses_scale_factor = read_poses(
+                pose_dir_train, img_files_train, output_boxes=True
+            )
+            all_c2w = read_poses_val(pose_dir_test, img_files_test, poses_scale_factor)
+
+            self.all_c2w_val = all_c2w
+            self.base_dir_val = base_dir_test
+            self.img_files_val = img_files_test
+            # base_dir = base_dir_test
+
             # all_c2w = read_poses_val(pose_dir_test, img_files_test, poses_scale_factor)
             # self.img_files_val = img_files_test
             # self.all_c2w_val = all_c2w
@@ -172,7 +270,7 @@ class NeRDS360(Dataset):
 
         print("all c2w", all_c2w.shape)
         w, h = self.img_wh
-        print("self.focal", self.focal)
+        # print("self.focal", self.focal)
         self.focal *= (
             self.img_wh[0] / self.img_size[0]
         )  # modify focal length to match size self.img_wh
