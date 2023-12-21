@@ -76,7 +76,7 @@ conda create -n neo360 python=3.7
 conda activate neo 360
 pip install --upgrade pip
 pip install -r requirements.txt
-pip install torch==1.10.0+cu111 torchvision==0.11.0+cu111 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
+pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://download.pytorch.org/whl/torch_stable.html
 ```
 The code was built and tested on **cuda 11.1**
 
@@ -124,6 +124,8 @@ Download the validation split from [here](https://drive.google.com/file/d/1eju8k
 
 
 Download the pretrained checkpoint from [here](https://drive.google.com/file/d/1-ZHbAsvG6Z3DIz3foez0zYJ2txVxIr-C/view?usp=sharing)
+
+Extract them under the project folder with directory structure ```data``` and ```ckpts```.
 
 
 Run the following script to run visualization i.e. 360&deg; rendering from just 3 or 5 source views given as input:
