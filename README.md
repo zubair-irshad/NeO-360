@@ -60,10 +60,10 @@ If you find this repository or our NERDS 360 dataset useful, please consider cit
 ### Contents
  - [🌇  Environment](#-environment)
  - [⛳ Dataset](#-dataset)
- - [🔖 Dataloaders](#dataloaders)
- - [💫 Inference](#inference)
- - [📉 Generalizable Training](#generalizable-training)
- - [📊 Overfitting Training Runs](#overfitting-training-runs)
+ - [🔖 Dataloaders](#-dataloaders)
+ - [💫 Inference](#-inference)
+ - [📉 Generalizable Training](#-generalizable-training)
+ - [📊 Overfitting Training Runs](#-overfitting-training-runs)
  - [📌 FAQ](#-faq)
 
 ## 🌇  Environment
@@ -119,7 +119,7 @@ a. Our dataloader for single scene overfitting is provided in ```datasets/nerds3
 
 b. Our dataloader for generalizable training is provided in ```datasets/nerds360_ae.py```. ```ae``` denotes auto-encoder style of training. This datalaoder is used for the few-shot setting proposed in our NeO360 paper. During eery training iteration, we randomly select 3 source views and 1 target view and sample 1000 rays from target view for decoding the radiance field. This is the same dataloader you'll see gets utilized next during training below.
 
-**Note**: Our NeRDS360 dataset also provides **depth map, NOCS maps, instance segmentation, semantic segmentation and 3D bounding box annotations** (all of these annotations are not used either during training or during inference and we only use RGB imahes). Although these annotations can be used for other computer vision tasks to push the SOTA for unbounded outdoor tasks like instance segmentation. All the other annotations are easy to load and provided as ```.png``` files
+**Note**: Our NeRDS360 dataset also provides **depth map, NOCS maps, instance segmentation, semantic segmentation and 3D bounding box annotations** (all of these annotations are not used either during training or during inference and we only use RGB images). Although these annotations can be used for other computer vision tasks to push the SOTA for unbounded outdoor tasks like instance segmentation. All the other annotations are easy to load and provided as ```.png``` files
 
 ## ✨ Inference
 
@@ -160,7 +160,7 @@ The current script evaluates the scenes one by one. Note that 3 or 5 source view
 If your checkpoint was finetuned with additional LPIPS loss then the render name must have LPIPS in order to load the LPIPS weights during rendering. See our model and code for further clarification.
 
 
-## 📉  Generalizable Training
+## 📉 Generalizable Training
 
 We train on the full NERDS 360 Dataset in 2 stages. First we train using a mix of photometric loss (i.e. MSE loss) + a distortion auxillary loss for 30-50 epochs. We then finetune with an addition of LPIPS loss for a few epochs to imporve the visual fidelity of results. 
 
@@ -184,7 +184,7 @@ We also provide an ```is_optimize``` flag to finetune on the few-shot source ima
 
 We also provide a home-grown implementation of [PixelNeRF](https://github.com/sxyu/pixel-nerf) which is built on top of NeRF-Factory and Pytorch Lightning. If you are a user of both of these, you might find it helpful. Just use exp_type ```pixelnerf``` and our generalizable dataset ```nerds360_ae``` to run pixelnerf training and evaluation with the scripts mentioned above :) 
 
-## 📊  Overfitting Training Runs
+## 📊 Overfitting Training Runs
 
 While over proposed technique is a generalizable method which works in a few-shot setting, for the ease of reproducibility and to push the state-of-the-art on single scene novel-view-synthesis of unbounded scenes, we provide scripts to overfit to single scenes given many images. We provide [NeRF](https://github.com/bmild/nerf) and [MipNeRF-360](https://jonbarron.info/mipnerf360/) baselines from [NeRF-Factory](https://github.com/kakaobrain/nerf-factory) with our newly proposed NeRDS360 dataset. 
 
@@ -212,6 +212,17 @@ To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
 ```python
 python run.py --dataset_name nerds360 --root_dir $neo360_rootdir/data/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
 ```
+
+## 📌 FAQ
+
+1. The compute requirements are very high. How do I run NeO-360 on low-memory GPUs:
+
+Please see [this](https://github.com/zubair-irshad/NeO-360/issues/10#issuecomment-1868560843) thread on things to try to reduce compute load. 
+
+2. Can I use NERDS360 dataset with my own NeRF implementation or other architectures?
+
+Absolutely, you can use NERDS360 with [Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) or any other NeRF implementation in both overfitting (i.e. many views scenario) or few-shot (i.e. few-views scenario). Please see [Dataloaders](https://github.com/zubair-irshad/NeO-360?tab=readme-ov-file#-dataloaders) and use any of our pre-released dataloaders with your implementation. Please note that a wrapper might have to be written on top of our dataloader to try Gaussian Splatting with our dataset with requires full-images and not just rays.
+
 
 ## Acknowledgments
 This code is built upon the implementation from [nerf-factory](https://github.com/kakaobrain/nerf-factory), [NeRF++](https://github.com/Kai-46/nerfplusplus) and [PixelNeRF](https://github.com/sxyu/pixel-nerf) with distortion loss and unbounded scene contraction used from [MipNeRF360](https://github.com/google-research/multinerf). Kudos to all the authors for great works and releasing their code. Thanks to the original [NeRF](https://github.com/bmild/nerf) implementation and the pytorch implementation [nerf_pl](https://github.com/kwea123/nerf_pl) for additional inspirations during this project. 
