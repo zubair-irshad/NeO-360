@@ -111,6 +111,12 @@ python visualize/visualize_nerds360.py --base_dir PDMultiObjv6/train/SF_GrantAnd
 </p>
 
 
+You could also run the following to just visualize the poses in a unit sphere after normalization:
+
+```python
+python visualize/visualize_poses.py --base_dir PDMultiObjv6/train/SF_GrantAndCalifornia10
+```
+
 ## 🔖 Dataloaders
 
 We provide two conveneint dataloaders written in **pytorch** for a. single-scene overfitting i.e. settings like testing [MipNeRF-360](https://jonbarron.info/mipnerf360/) and b. generalizable evaluation i.e. few-shot setting introduced in our paper. There is a convenient ```read_poses``` function in each of the dataloaders. Use this function to see how we load poses with the corresponding images to use our **NERDS360** dataset with any NeRF implementation.
@@ -120,6 +126,14 @@ a. Our dataloader for single scene overfitting is provided in ```datasets/nerds3
 b. Our dataloader for generalizable training is provided in ```datasets/nerds360_ae.py```. ```ae``` denotes auto-encoder style of training. This datalaoder is used for the few-shot setting proposed in our NeO360 paper. During eery training iteration, we randomly select 3 source views and 1 target view and sample 1000 rays from target view for decoding the radiance field. This is the same dataloader you'll see gets utilized next during training below.
 
 **Note**: Our NeRDS360 dataset also provides **depth map, NOCS maps, instance segmentation, semantic segmentation and 3D bounding box annotations** (all of these annotations are not used either during training or during inference and we only use RGB images). Although these annotations can be used for other computer vision tasks to push the SOTA for unbounded outdoor tasks like instance segmentation. All the other annotations are easy to load and provided as ```.png``` files
+
+Additionally, to output a convenient ```transforms.json``` file for a scene in the original [NeRF's blender format data](https://github.com/bmild/nerf), run the following:
+
+```python
+python convert_to_nerf_blender --base_dir PDMultiObjv6/train/SF_GrantAndCalifornia10
+```
+
+Note that creating a trasnforms.json file is not required for running our codebase and is merely a convenient script to work with other NeRF architectures.
 
 ## ✨ Inference
 
@@ -186,6 +200,9 @@ We also provide a home-grown implementation of [PixelNeRF](https://github.com/sx
 
 ## 📊 Overfitting Training Runs
 
+
+### Overfitting [NeRFs](https://github.com/bmild/nerf)
+
 While over proposed technique is a generalizable method which works in a few-shot setting, for the ease of reproducibility and to push the state-of-the-art on single scene novel-view-synthesis of unbounded scenes, we provide scripts to overfit to single scenes given many images. We provide [NeRF](https://github.com/bmild/nerf) and [MipNeRF-360](https://jonbarron.info/mipnerf360/) baselines from [NeRF-Factory](https://github.com/kakaobrain/nerf-factory) with our newly proposed NeRDS360 dataset. 
 
 To overfit to a single scene using vanilla NeRF on NERDS360 Dataset, simply run:
@@ -212,6 +229,14 @@ To overfit to a single scene using MipNeRF360 on NERDS360 Dataset, simply run:
 ```python
 python run.py --dataset_name nerds360 --root_dir $neo360_rootdir/data/PD_v6_test/test_novel_objs/SF_GrantAndCalifornia6 --exp_type mipnerf360 --exp_name overfitting_test_mipnerf360_2 --img_wh 320 240 --num_gpus 7
 ```
+
+### Overfitting [GaussianSplatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
+
+You can use ```convert_to_nerf_blender.py``` script as shown above to create a ```transforms.json``` file in NeRF's blender format to train a Gaussian Splatting. One could also run colmap on our provided images and then train gaussian splatting using [nerfstudio](https://docs.nerf.studio/). We benchmarked overfitting Gaussian Splatting on NERDS360 dataset and achieved a PSNR of around 31 by just training for a few minutes on a single GPU to get the following output.
+
+<p align="center">
+<img src="demo/nerds360_gaussian_splatting.gif" width="100%">
+</p>
 
 ## 📌 FAQ
 
