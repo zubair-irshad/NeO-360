@@ -95,7 +95,11 @@ NeRDS 360: "NeRF for Reconstruction, Decomposition and Scene Synthesis of 360° 
 * [NERDS360 Training Set](https://tri-ml-public.s3.amazonaws.com/github/neo360/datasets/PDMultiObjv6.tar.gz) - 75 Scenes (19.5 GB)
 * [NERDS360 Test Set](https://tri-ml-public.s3.amazonaws.com/github/neo360/datasets/PD_v6_test.tar.gz) - 5 Scenes (2.1 GB)
 
+* [NERDS360 Colmap](https://drive.google.com/file/d/13jcD0_ad0vP9H6AGFfhj2ZHb1UWkW_zt/view?usp=sharing) - 10 Scenes (2.1 GB)
+
 Extract the data under ```data``` directory or provide a symlink under project ```data``` directory. The directory structure should look like this ```$neo360_rootdir/data/PDMuliObjv6```
+
+Colamp poses can be used for techniques such as [3D Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). Please see our [overfitting experiments](https://github.com/zubair-irshad/NeO-360?tab=readme-ov-file#overfitting-gaussiansplatting) for more details.
 
 #### Visualizing the dataset:
 To plot accumulated pointclouds, multi-view camera annotations and bounding boxes annotations as shown in the visualization below, run the following commands. This visualization script is adapted from [NeRF++](https://github.com/Kai-46/nerfplusplus). 
