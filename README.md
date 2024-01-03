@@ -59,7 +59,7 @@ If you find this repository or our NERDS 360 dataset useful, please consider cit
 
 ### Contents
  - [🌇  Environment](#-environment)
- - [⛳ Dataset](#-dataset)
+ - [⛳ **Dataset (Updated with colmap poses)**](#-dataset)
  - [🔖 Dataloaders](#-dataloaders)
  - [💫 Inference](#-inference)
  - [📉 Generalizable Training](#-generalizable-training)
