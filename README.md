@@ -110,6 +110,10 @@ Zoom-in the visualization to see the objects. Red cameras are source-view camera
 python visualize/visualize_nerds360.py --base_dir PDMultiObjv6/train/SF_GrantAndCalifornia10
 ```
 
+### Semantic Labels
+
+Semantic labels for our dataset are included in ```utils/semantic_labels.py```. For instance the car corresponds to id 5, Road is id 24 and so on.
+
 <p align="center">
 <img src="demo/cameras.gif" width="100%">
 </p>
