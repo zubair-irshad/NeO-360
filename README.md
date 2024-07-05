@@ -48,13 +48,13 @@ International Conference on Computer Vision (ICCV), 2023<br> -->
 If you find this repository or our NERDS 360 dataset useful, please consider citing:
 
 ```
+
 @inproceedings{irshad2023neo360,
-  title={NeO 360: Neural Fields for Sparse View Synthesis of Outdoor Scenes},
-  author={Muhammad Zubair Irshad and Sergey Zakharov and Katherine Liu and Vitor Guizilini and Thomas Kollar and Adrien Gaidon and Zsolt Kira and Rares Ambrus},
-  journal={Interntaional Conference on Computer Vision (ICCV)},
-  year={2023},
-  url={https://arxiv.org/abs/2308.12967},
-}
+          title={NeO 360: Neural Fields for Sparse View Synthesis of Outdoor Scenes},
+          author={Muhammad Zubair Irshad and Sergey Zakharov and Katherine Liu and Vitor Guizilini and Thomas Kollar and Adrien Gaidon and Zsolt Kira and Rares Ambrus},
+          journal={Interntaional Conference on Computer Vision (ICCV)},
+          year={2023}
+        }
 ```
 
 ### Contents
