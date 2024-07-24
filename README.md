@@ -73,7 +73,7 @@ Create a python 3.7 virtual environment and install requirements:
 ```bash
 cd $NeO-360 repo
 conda create -n neo360 python=3.7
-conda activate neo 360
+conda activate neo360
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://download.pytorch.org/whl/torch_stable.html
@@ -97,7 +97,7 @@ NeRDS 360: "NeRF for Reconstruction, Decomposition and Scene Synthesis of 360° 
 
 * [NERDS360 Colmap](https://drive.google.com/file/d/13jcD0_ad0vP9H6AGFfhj2ZHb1UWkW_zt/view?usp=sharing) - 10 Scenes (2.1 GB)
 
-Extract the data under ```data``` directory or provide a symlink under project ```data``` directory. The directory structure should look like this ```$neo360_rootdir/data/PDMuliObjv6```
+Extract the data under ```data``` directory or provide a symlink under project ```data``` directory. The directory structure should look like this ```$neo360_rootdir/data/PDMultiObjv6```
 
 Colamp poses can be used for techniques such as [3D Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). Please see our [overfitting experiments](https://github.com/zubair-irshad/NeO-360?tab=readme-ov-file#overfitting-gaussiansplatting) for more details.
 
